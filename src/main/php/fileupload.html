@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Files upload test</title>
+</head>
+<?php ?>
+<body>
+    <form target="fileupload.php" method="post">
+        <label>
+            username:
+            <input name="username" type="text">
+        </label>
+        <br>
+        <label>
+            password:
+            <input name="password" type="password">
+        </label>
+        <br>
+        <input name="uploaded[]" type="file" multiple="multiple">
+        <br>
+        <input type="submit">
+    </form>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jula set draw</title>
+	<script>
+	var pixels;
+	var width;
+	var height;
+	var maxX = 2.;
+	var minX = -2.;
+	var maxY = 1.;
+	var minY = -1.;
+	var dx, dy;
+	
+	function targetY(x) {
+		return x*x;
+	}
+	
+	function f(x, y) {
+		var tYd = targetY(x);
+		var tYu = tYd +dy;
+		
+		if (
+			((targetY(x - dx) <= y + dy) && (targetY(x + dx) >= y - dy)) ||
+			((targetY(x - dx) >= y - dy) && (targetY(x + dx) <= y + dy))
+		) {
+			return 1;
+		}
+		return 0;
+	}
+	
+	function draw(){
+		dx = (maxX - minX) / width;
+		dy = (maxY - minY) / height;
+
+		for(var xS = 0; xS<width; xS = xS + 1) {
+			for(var yS = 0; yS<height; yS = yS + 1) {
+				var xR = xRe(xS);
+				var yR = yRe(yS);
+				putPixel (xScreen(xR),yScreen(yR), 255*f(xR, yR), 0, 0);
+			}
+		}
+	}
+	
+	function xScreen(realX) {
+		return  Math.floor(width * (realX - minX) / (maxX - minX));
+	}
+	
+	function xRe(screenX) {
+		return minX + (screenX / width) * (maxX - minX);
+	}
+
+	function yScreen(realY) {
+		return  Math.floor(height * (1 - (realY - minY) / (maxY - minY)));
+	}
+
+	function yRe(screenY) {
+		return maxY - (screenY / height) * (maxY - minY);
+	}
+
+	function putPixel(x, y, red, green, blue) {
+		var i = (y * width + x) * 4;
+		pixels[i] = red;
+		pixels[i+1] = green;
+		pixels[i+2] = blue;
+		pixels[i+3] = 255; // alpha channel
+	}
+
+	function onload(){
+		// Получить ссылку на элемент canvas по идентификатору.
+		var elem = document.getElementById('canvas');
+		width = elem.width;
+		height = elem.height;
+
+		// Всегда проверяйте свойства и методы на доступность для обратной совместимости со старыми браузерами
+		if (elem && elem.getContext) {
+			// Получить 2D контекст.
+			// Запомните: вы можете инициализировать только один контекст для каждого элемента
+			var context = elem.getContext('2d');
+			if (context) {
+				// Создадим объект ImageData.
+				var img = context.createImageData(width, height);
+				pixels = img.data;
+				
+				// Пройдемся по всем пикселям и зададим черный цвет
+				for (var i = 0; n = pixels.length, i < n; i += 4) {
+					pixels[i+3] = 255; // alpha channel
+				}
+				
+				// Теперь можно рисовать
+				draw();
+				
+				// Отрисовать объект ImageData в заданных координатах (x,y).
+				context.putImageData(img, 0, 0);
+			} else {
+				alert("Ошибка!");
+			}
+		} else {
+			alert("Ошибка!");
+		}
+	}
+	</script>
+</head>
+<body onload="onload()">
+    <h1>Jula set draw</h1>
+	<canvas id="canvas"  width="800" height="600"></canvas>
+</body>
+</html>
